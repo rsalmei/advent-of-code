@@ -13,8 +13,5 @@ pub fn input_parse<T: FromStr>(day: u8) -> Vec<T>
 where
     <T as FromStr>::Err: fmt::Debug,
 {
-    input(day)
-        .lines()
-        .map(|s| s.parse::<T>().unwrap())
-        .collect()
+    input(day).lines().map(|s| s.parse().unwrap()).collect()
 }
