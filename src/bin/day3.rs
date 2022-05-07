@@ -1,7 +1,8 @@
+use std::io;
 use std::str::FromStr;
 
-fn main() {
-    let data = aoc2018::input_parse::<Claim>(3);
+fn main() -> io::Result<()> {
+    let data = aoc2018::input_parse::<Claim>(3)?;
 
     // part one.
     let overlap = (0..1000)
@@ -25,6 +26,7 @@ fn main() {
             .all(|c2| !c.overlaps(c2))
     });
     println!("{}", unique.unwrap().id);
+    Ok(())
 }
 
 #[derive(Debug)]

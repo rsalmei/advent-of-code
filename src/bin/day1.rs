@@ -1,7 +1,8 @@
 use std::collections::HashSet;
+use std::io;
 
-fn main() {
-    let data = aoc2018::input_parse(1);
+fn main() -> io::Result<()> {
+    let data = aoc2018::input_parse(1)?;
 
     // part one.
     println!("{}", data.iter().sum::<i32>());
@@ -14,4 +15,5 @@ fn main() {
         Some(*acc)
     });
     println!("{}", frequencies.find(|&f| !seen.insert(f)).unwrap());
+    Ok(())
 }

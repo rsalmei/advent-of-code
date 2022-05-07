@@ -1,7 +1,8 @@
 use std::collections::HashMap;
+use std::io;
 
-fn main() {
-    let data = aoc2018::input_lines(2);
+fn main() -> io::Result<()> {
+    let data = aoc2018::input_lines(2)?;
 
     // part one.
     let mut tmp = HashMap::new();
@@ -39,4 +40,5 @@ fn main() {
         .filter_map(|(c1, c2)| (c1 == c2).then(|| c1))
         .collect::<String>();
     println!("{}", response);
+    Ok(())
 }

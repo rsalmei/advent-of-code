@@ -1,8 +1,9 @@
 use std::collections::BTreeMap;
+use std::io;
 use std::str::FromStr;
 
-fn main() {
-    let mut data = aoc2018::input_lines(4);
+fn main() -> io::Result<()> {
+    let mut data = aoc2018::input_lines(4)?;
     data.sort_unstable();
     let data = data
         .into_iter()
@@ -49,6 +50,7 @@ fn main() {
             .flat_map(|s| (s.start..s.start + s.duration).map(|m| ((s.guard, m), 1))),
     );
     println!("{}", guard_minute.0 .0 as u32 * guard_minute.0 .1 as u32);
+    Ok(())
 }
 
 #[derive(Debug, Default, Copy, Clone)]
