@@ -2,6 +2,8 @@ use std::str::FromStr;
 
 fn main() {
     let data = aoc2018::input_parse::<Claim>(3);
+
+    // part one.
     let overlap = (0..1000)
         .flat_map(|x| (0..1000).map(move |y| (x, y)))
         .map(|(x, y)| {

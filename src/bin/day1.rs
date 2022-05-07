@@ -2,6 +2,8 @@ use std::collections::HashSet;
 
 fn main() {
     let data = aoc2018::input_parse(1);
+
+    // part one.
     println!("{}", data.iter().sum::<i32>());
 
     // part two.

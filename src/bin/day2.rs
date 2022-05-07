@@ -2,6 +2,8 @@ use std::collections::HashMap;
 
 fn main() {
     let data = aoc2018::input_lines(2);
+
+    // part one.
     let mut tmp = HashMap::new();
     let two_three = data
         .iter()
