@@ -25,6 +25,7 @@ fn main() -> io::Result<()> {
         .flatten()
         .collect::<Vec<_>>();
 
+    // part one.
     fn find_max<T: Ord>(it: impl Iterator<Item = (T, u32)>) -> (T, u32) {
         it.fold(BTreeMap::new(), |mut acc, (k, c)| {
             *acc.entry(k).or_insert(0u32) += c;
@@ -35,7 +36,6 @@ fn main() -> io::Result<()> {
         .unwrap()
     }
 
-    // part one.
     let guard = find_max(data.iter().map(|s| (s.guard, s.duration as u32)));
     let minute = find_max(
         data.iter()
