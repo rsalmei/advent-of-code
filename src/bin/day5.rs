@@ -1,39 +1,42 @@
-use std::io;
+use std::borrow::Cow;
+use std::{io, iter};
 
 fn main() -> io::Result<()> {
-    let mut data = aoc2018::input(5)?.chars().collect::<Vec<_>>();
-    data.pop();
+    let mut data = aoc2018::input(5)?.into_bytes();
+    data.pop(); // \n at the end of the file.
 
     // part one.
-    let react = |d: &[char], offset| {
-        d.iter()
-            .take(offset)
-            .chain(
-                d[offset..]
-                    .chunks(2)
-                    .flat_map(|d| match d {
-                        [a, b] if a.to_ascii_lowercase() != b.to_ascii_lowercase() => Some(d),
-                        [a, b] => (!a.is_ascii_lowercase() ^ b.is_ascii_lowercase()).then(|| d),
-                        _ => Some(d),
-                    })
-                    .flatten(),
-            )
-            .copied()
-            .collect::<Vec<_>>()
+    let react = |data: &[u8]| {
+        let mut out = Vec::with_capacity(data.len());
+        data.iter()
+            .chain(iter::once(&0))
+            .fold(None, |acc: Option<u8>, &d| {
+                match acc {
+                    Some(a) if a.to_ascii_lowercase() != d.to_ascii_lowercase() => out.push(a),
+                    Some(a) if a.is_ascii_lowercase() ^ d.is_ascii_lowercase() => return None,
+                    Some(a) => out.push(a),
+                    None => {}
+                };
+                Some(d)
+            });
+        out
     };
-    let react_fully = |mut start: Vec<char>| loop {
-        let end = react(&react(&start, 0), 1);
-        match start.len() == end.len() {
-            true => break end,
-            false => start = end,
+    let react_fully = |data: &[u8]| {
+        let mut before = Cow::Borrowed(data);
+        loop {
+            let after: Cow<[u8]> = Cow::Owned(react(&before));
+            match before.len() == after.len() {
+                true => break after,
+                false => before = after,
+            }
         }
     };
 
-    let final_polymer = react_fully(data.clone());
+    let final_polymer = react_fully(&data);
     println!("{}", final_polymer.len());
 
     // part two.
-    let min_len = ('a'..'z')
+    let min_len = ('a' as u8..'z' as u8)
         .into_iter()
         .map(|unit| [unit, unit.to_ascii_uppercase()])
         .map(|units| {
@@ -42,7 +45,7 @@ fn main() -> io::Result<()> {
                 .filter(|&c| !units.contains(c))
                 .copied()
                 .collect::<Vec<_>>();
-            react_fully(polymer).len()
+            react_fully(&polymer).len()
         })
         .min();
     println!("{}", min_len.unwrap());
