@@ -1,6 +1,8 @@
 mod aoc2018;
 
 use clap::Parser;
+use std::collections::HashMap;
+use std::num::NonZeroU8;
 use std::path::Path;
 use std::str::FromStr;
 use std::{fmt, fs, io};
@@ -12,7 +14,7 @@ pub struct Input {
 impl Input {
     fn new(AoC { year, day }: AoC) -> io::Result<Self> {
         Ok(Self {
-            data: fs::read_to_string(format!("inputs/{year}/day{day}.txt"))?,
+            data: fs::read_to_string(format!("inputs/{year}/{day}"))?,
         })
     }
 
@@ -32,13 +34,15 @@ fn main() {
     println!("Advent of Code manager");
     println!("----------------------");
     let args = AoC::parse();
-    match (Input::new(args), args.year) {
-        (Ok(input), 2018) => {
+
+    let aoc_years = HashMap::from([(2018, aoc2018::RUN)]);
+    match Input::new(args) {
+        Ok(input) => {
             println!("  year: {}  day: {}\n", args.year, args.day);
-            aoc2018::RUN[args.day as usize - 1](input);
+            aoc_years[&args.year][args.day.get() as usize - 1](input);
         }
         _ => {
-            println!("Year or day not found, available:");
+            println!("\nYear or day not found, available:");
             available();
         }
     }
@@ -47,7 +51,7 @@ fn main() {
 #[derive(Debug, Copy, Clone, clap::Parser)]
 struct AoC {
     year: u16,
-    day: u8,
+    day: NonZeroU8,
 }
 
 fn available() {
@@ -62,10 +66,9 @@ fn available() {
     };
     entries(&"inputs").iter().for_each(|d| {
         println!("{}", d.file_name().to_string_lossy());
-        entries(&d.path()).iter().for_each(|d| {
-            let n = d.file_name().to_string_lossy().chars().nth(3).unwrap();
-            print!(" {n}")
-        });
+        entries(&d.path())
+            .iter()
+            .for_each(|d| print!(" {}", d.file_name().to_string_lossy()));
+        println!()
     });
-    println!()
 }
