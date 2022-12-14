@@ -1,8 +1,9 @@
+use crate::Input;
 use std::borrow::Cow;
-use std::{io, iter};
+use std::iter;
 
-fn main() -> io::Result<()> {
-    let mut data = aoc2018::input(5)?.into_bytes();
+pub fn run(input: Input) {
+    let mut data = input.data.into_bytes();
     data.pop(); // \n at the end of the file.
 
     // part one.
@@ -49,5 +50,4 @@ fn main() -> io::Result<()> {
         })
         .min();
     println!("{}", min_len.unwrap());
-    Ok(())
 }

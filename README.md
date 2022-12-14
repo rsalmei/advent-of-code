@@ -1,18 +1,18 @@
-# My Advent of Code
+# My Advent of Code Manager
 
-Rust solutions to [AoC 2018](https://adventofcode.com/2018)
+Rust solutions to [Advent of Code](https://adventofcode.com/)
 
 I like to write clean and idiomatic code, while also keeping it short and efficient.
 <br>I always try to use iterators, built-in traits, closures, and generics to make cool and easy to use APIs.
 <br>At times I like to be clever, which results in not the easiest codes to understand, but it makes me feel good 😊.
 
-Rust is awesome, but also very hard and challenging, which makes me even more enthusiastic to master it!
-<br>I'm doing this to try to improve my Rust, and perhaps I could spread some knowledge along the way.
+Rust is awesome but also very hard and challenging, which makes me even more enthusiastic in mastering it!
+<br>I'm doing this to play with and improve my Rust, and I hope you may learn something with it.
 
-To run any day, just:
+Now there's support for any year! To run it, just:
 ```bash
-❯ cargo run --bin dayX
+❯ cargo run --release <year> <day>
 ```
 
-If you have any suggestions or doubts, please open an issue or discussion!
+If you have suggestions or doubts, you can open an issue.
 <br>I ❤️ Rust, let's talk about it!

@@ -1,8 +1,8 @@
-use std::io;
+use crate::Input;
 use std::str::FromStr;
 
-fn main() -> io::Result<()> {
-    let data = aoc2018::input_parse::<Claim>(3)?;
+pub fn run(input: Input) {
+    let data = input.parse_lines::<Claim>();
 
     // part one.
     let overlap = (0..1000)
@@ -26,7 +26,6 @@ fn main() -> io::Result<()> {
             .all(|c2| !c.overlaps(c2))
     });
     println!("{}", unique.unwrap().id);
-    Ok(())
 }
 
 #[derive(Debug)]
