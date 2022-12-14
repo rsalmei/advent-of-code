@@ -18,8 +18,8 @@ impl Input {
         })
     }
 
-    pub fn as_lines(&self) -> Vec<String> {
-        self.data.lines().map(ToOwned::to_owned).collect()
+    pub fn as_lines(&self) -> Vec<&str> {
+        self.data.lines().collect()
     }
 
     pub fn parse_lines<T: FromStr>(&self) -> Vec<T>
