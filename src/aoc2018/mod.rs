@@ -6,4 +6,4 @@ mod day5;
 
 use crate::Input;
 
-pub(crate) const RUN: &[fn(Input)] = &[day1::run, day2::run, day3::run, day4::run, day5::run];
+pub const RUN: &[fn(Input)] = &[day1::run, day2::run, day3::run, day4::run, day5::run];

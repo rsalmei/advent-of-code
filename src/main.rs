@@ -1,4 +1,5 @@
 mod aoc2018;
+mod aoc2022;
 
 use clap::Parser;
 use std::collections::HashMap;
@@ -35,7 +36,7 @@ fn main() {
     println!("----------------------");
     let args = AoC::parse();
 
-    let aoc_years = HashMap::from([(2018, aoc2018::RUN)]);
+    let aoc_years = HashMap::from([(2018, aoc2018::RUN), (2022, aoc2022::RUN)]);
     match Input::new(args) {
         Ok(input) => {
             println!("  year: {}  day: {}\n", args.year, args.day);
