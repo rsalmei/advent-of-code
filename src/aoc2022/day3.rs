@@ -15,7 +15,7 @@ pub fn run(input: Input) {
         .map(|&ks| {
             let (a, b) = ks.split_at(ks.len() / 2);
             let a = a.as_bytes().iter().copied().collect::<HashSet<_>>();
-            let b = b.as_bytes().iter().copied().collect::<HashSet<_>>();
+            let b = b.as_bytes().iter().copied().collect();
             *a.intersection(&b).next().unwrap()
         })
         .map(|i| priority.iter().position(|&t| i == t).unwrap());
@@ -26,8 +26,8 @@ pub fn run(input: Input) {
         .chunks(3)
         .map(|g| {
             let a = g[0].as_bytes().iter().copied().collect::<HashSet<_>>();
-            let b = g[1].as_bytes().iter().copied().collect::<HashSet<_>>();
-            let c = g[2].as_bytes().iter().copied().collect::<HashSet<_>>();
+            let b = g[1].as_bytes().iter().copied().collect();
+            let c = g[2].as_bytes().iter().copied().collect();
             *a.intersection(&b)
                 .copied()
                 .collect::<HashSet<_>>()
