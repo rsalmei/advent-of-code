@@ -13,7 +13,7 @@ pub struct Input {
 }
 
 impl Input {
-    fn new(AoC { year, day }: AoC) -> io::Result<Self> {
+    fn new(Args { year, day }: Args) -> io::Result<Self> {
         Ok(Self {
             data: fs::read_to_string(format!("inputs/{year}/{day}"))?,
         })
@@ -31,10 +31,16 @@ impl Input {
     }
 }
 
+#[derive(Debug, Copy, Clone, clap::Parser)]
+struct Args {
+    year: u16,
+    day: NonZeroU8,
+}
+
 fn main() {
     println!("Advent of Code manager");
     println!("----------------------");
-    let args = AoC::parse();
+    let args = Args::parse();
 
     let aoc_years = HashMap::from([(2018, aoc2018::RUN), (2022, aoc2022::RUN)]);
     match Input::new(args) {
@@ -47,12 +53,6 @@ fn main() {
             available();
         }
     }
-}
-
-#[derive(Debug, Copy, Clone, clap::Parser)]
-struct AoC {
-    year: u16,
-    day: NonZeroU8,
 }
 
 fn available() {
