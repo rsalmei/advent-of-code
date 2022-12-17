@@ -3,7 +3,6 @@ mod aoc2022;
 
 use clap::Parser;
 use std::collections::HashMap;
-use std::num::NonZeroU8;
 use std::path::Path;
 use std::str::FromStr;
 use std::{fmt, fs, io};
@@ -34,19 +33,19 @@ impl Input {
 #[derive(Debug, Copy, Clone, clap::Parser)]
 struct Args {
     year: u16,
-    day: NonZeroU8,
+    day: u8,
 }
 
 fn main() {
-    println!("Advent of Code manager");
-    println!("----------------------");
+    println!("My Advent of Code manager");
+    println!("-------------------------");
     let args = Args::parse();
 
     let aoc_years = HashMap::from([(2018, aoc2018::RUN), (2022, aoc2022::RUN)]);
     match Input::new(args) {
         Ok(input) => {
-            println!("  year: {}  day: {}\n", args.year, args.day);
-            aoc_years[&args.year][args.day.get() as usize - 1](input);
+            println!("year: {}  day: {}\n", args.year, args.day);
+            aoc_years[&args.year][args.day as usize - 1](input);
         }
         _ => {
             println!("\nYear or day not found, available:");
