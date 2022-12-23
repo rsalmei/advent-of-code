@@ -9,14 +9,14 @@ struct Move {
 }
 
 impl Move {
-    fn apply_single(&self, stacks: &mut Vec<Vec<char>>) {
+    fn apply_single(&self, stacks: &mut [Vec<char>]) {
         (0..self.qty).for_each(|_| {
             let from = stacks[self.from].pop().unwrap();
             stacks[self.to].push(from)
         })
     }
 
-    fn apply_multi(&self, stacks: &mut Vec<Vec<char>>) {
+    fn apply_multi(&self, stacks: &mut [Vec<char>]) {
         let from = &mut stacks[self.from];
         let from = from
             .drain(from.len() - self.qty..from.len())
@@ -66,7 +66,7 @@ pub fn run(input: Input) {
             .for_each(|m| m.apply_single(&mut stacks));
         let top = stacks
             .iter()
-            .map(|v| *v.last().unwrap() as char)
+            .map(|v| *v.last().unwrap())
             .collect::<String>();
         println!("{top}");
     }
@@ -78,7 +78,7 @@ pub fn run(input: Input) {
         .for_each(|m| m.apply_multi(&mut stacks));
     let top = stacks
         .iter()
-        .map(|v| *v.last().unwrap() as char)
+        .map(|v| *v.last().unwrap())
         .collect::<String>();
     println!("{top}");
 }

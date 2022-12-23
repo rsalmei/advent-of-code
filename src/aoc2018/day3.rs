@@ -11,8 +11,8 @@ pub fn run(input: Input) {
             data.iter()
                 .try_fold(true, |acc, c| {
                     (!c.contains(x, y))
-                        .then(|| acc)
-                        .or_else(|| acc.then(|| false))
+                        .then_some(acc)
+                        .or_else(|| acc.then_some(false))
                 })
                 .map_or(1, |_| 0)
         })

@@ -59,7 +59,7 @@ fn available() {
         let mut entries = fs::read_dir(x.as_ref())
             .unwrap()
             .filter_map(|d| d.ok())
-            .filter(|d| !d.file_name().to_string_lossy().starts_with("."))
+            .filter(|d| !d.file_name().to_string_lossy().starts_with('.'))
             .collect::<Vec<_>>();
         entries.sort_unstable_by_key(|d| d.file_name());
         entries

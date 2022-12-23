@@ -7,10 +7,7 @@ pub fn run(input: Input) {
     data.sort_unstable();
     let data = data
         .into_iter()
-        .filter_map(|d| d.parse().ok())
-        .collect::<Vec<Record>>();
-    let data = data
-        .into_iter()
+        .map(|d| d.parse::<Record>().unwrap())
         .scan(Slept::default(), |acc, r| {
             match r {
                 Record::BeginShift(id) => acc.guard = id,

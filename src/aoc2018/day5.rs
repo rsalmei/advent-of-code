@@ -37,7 +37,7 @@ pub fn run(input: Input) {
     println!("{}", final_polymer.len());
 
     // part two.
-    let min_len = ('a' as u8..'z' as u8)
+    let min_len = (b'a'..=b'z')
         .into_iter()
         .map(|unit| [unit, unit.to_ascii_uppercase()])
         .map(|units| {

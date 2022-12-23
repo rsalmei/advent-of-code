@@ -22,7 +22,7 @@ pub fn run(input: Input) {
     let similar = |w1: &str, w2: &str| {
         // the fastest way I could come up with: it short-circuits while detecting differences!
         w1.chars().zip(w2.chars()).try_fold(true, |acc, (a, b)| {
-            (a == b).then(|| acc).or_else(|| acc.then(|| false))
+            (a == b).then_some(acc).or_else(|| acc.then_some(false))
         })
     };
     let (w1, w2) = data
@@ -37,7 +37,7 @@ pub fn run(input: Input) {
     let response = w1
         .chars()
         .zip(w2.chars())
-        .filter_map(|(c1, c2)| (c1 == c2).then(|| c1))
+        .filter_map(|(c1, c2)| (c1 == c2).then_some(c1))
         .collect::<String>();
     println!("{}", response);
 }

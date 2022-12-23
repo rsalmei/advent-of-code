@@ -1,15 +1,15 @@
 use crate::Input;
 use Outcome::*;
-use RPS::*;
+use Rps::*;
 
 #[derive(Copy, Clone, PartialEq)]
-enum RPS {
+enum Rps {
     Rock = 1,
     Paper = 2,
     Scissors = 3,
 }
 
-impl RPS {
+impl Rps {
     fn from(letter: u8, map: &str) -> Self {
         let map = map.as_bytes();
         match *map {
@@ -20,7 +20,7 @@ impl RPS {
         }
     }
 
-    fn score(self, other: RPS) -> u32 {
+    fn score(self, other: Rps) -> u32 {
         self as u32
             + match (self, other) {
                 _ if self == other => 3,
@@ -36,7 +36,11 @@ impl RPS {
             (Paper, _) => (Rock, Scissors),
             (Scissors, _) => (Paper, Rock),
         };
-        (outcome == Win).then_some(win).unwrap_or(lose)
+        if outcome == Win {
+            win
+        } else {
+            lose
+        }
     }
 }
 
@@ -66,7 +70,7 @@ pub fn run(input: Input) {
         .iter()
         .map(|&x| x.as_bytes())
         .map(|x| (x[0], x[2]))
-        .map(|(a, b)| (RPS::from(a, "ABC"), RPS::from(b, "XYZ")))
+        .map(|(a, b)| (Rps::from(a, "ABC"), Rps::from(b, "XYZ")))
         .map(|(a, b)| b.score(a));
     println!("{}", games.sum::<u32>());
 
@@ -75,7 +79,7 @@ pub fn run(input: Input) {
         .iter()
         .map(|&x| x.as_bytes())
         .map(|x| (x[0], x[2]))
-        .map(|(a, b)| (RPS::from(a, "ABC"), Outcome::from(b)))
+        .map(|(a, b)| (Rps::from(a, "ABC"), Outcome::from(b)))
         .map(|(a, out)| a.reverse(out).score(a));
     println!("{}", games.sum::<u32>());
 }

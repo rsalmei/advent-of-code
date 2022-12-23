@@ -50,7 +50,7 @@ impl<'a> Sh<'a> {
                             self.fs.insert(curr.clone(), *size);
                         }
                     }
-                    if curr.pop().is_some() && curr.len() == 0 {
+                    if curr.pop().is_some() && curr.is_empty() {
                         break;
                     }
                 }
