@@ -59,16 +59,16 @@ fn available() {
         let mut entries = fs::read_dir(x.as_ref())
             .unwrap()
             .filter_map(|d| d.ok())
-            .filter(|d| !d.file_name().to_string_lossy().starts_with('.'))
+            .filter(|d| !d.file_name().to_str().unwrap().starts_with('.'))
             .collect::<Vec<_>>();
         entries.sort_unstable_by_key(|d| d.file_name());
         entries
     };
     entries(&"inputs").iter().for_each(|d| {
-        println!("{}", d.file_name().to_string_lossy());
+        println!("{}", d.file_name().to_str().unwrap());
         entries(&d.path())
             .iter()
-            .for_each(|d| print!(" {}", d.file_name().to_string_lossy()));
+            .for_each(|d| print!(" {}", d.file_name().to_str().unwrap()));
         println!()
     });
 }
