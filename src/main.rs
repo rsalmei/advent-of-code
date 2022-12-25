@@ -32,7 +32,9 @@ impl Input {
 
 #[derive(Debug, Copy, Clone, clap::Parser)]
 struct Args {
+    #[arg(default_value_t = 0)]
     year: u16,
+    #[arg(default_value_t = 0)]
     day: u8,
 }
 
@@ -40,15 +42,15 @@ fn main() {
     println!("My Advent of Code manager");
     println!("-------------------------");
     let args = Args::parse();
+    println!("year: {}  day: {}\n", args.year, args.day);
 
     let aoc_years = HashMap::from([(2018, aoc2018::RUN), (2022, aoc2022::RUN)]);
     match Input::new(args) {
         Ok(input) => {
-            println!("year: {}  day: {}\n", args.year, args.day);
             aoc_years[&args.year][args.day as usize - 1](input);
         }
         _ => {
-            println!("\nYear or day not found, available:");
+            println!("Year or day not found, available:");
             available();
         }
     }
