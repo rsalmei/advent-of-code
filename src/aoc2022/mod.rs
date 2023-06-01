@@ -9,7 +9,7 @@ mod day8;
 
 use crate::Input;
 
-pub const RUN: &[fn(Input)] = &[
+pub const DAYS: &[fn(Input)] = &[
     day1::run,
     day2::run,
     day3::run,
