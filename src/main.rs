@@ -7,7 +7,7 @@ use std::str::FromStr;
 use std::{fmt, fs, io};
 
 pub struct Input {
-    pub data: String,
+    data: String,
 }
 
 impl Input {
@@ -17,19 +17,27 @@ impl Input {
         })
     }
 
+    pub fn get_as<'a, T, F: Fn(&'a str) -> T>(&'a self, f: F) -> Vec<T> {
+        self.data.lines().map(f).collect()
+    }
+
     pub fn as_lines(&self) -> Vec<&str> {
-        self.data.lines().collect()
+        self.get_as(|s| s)
     }
 
-    pub fn parse_lines<T: FromStr>(&self) -> Vec<T>
+    pub fn as_parse<T: FromStr, U, F: Fn(Result<T, T::Err>) -> U>(&self, f: F) -> Vec<U> {
+        self.get_as(|s| f(s.parse()))
+    }
+
+    pub fn as_parse_type<T: FromStr>(&self) -> Vec<T>
     where
-        <T as FromStr>::Err: fmt::Debug,
+        T::Err: fmt::Debug,
     {
-        self.data.lines().map(|s| s.parse().unwrap()).collect()
+        self.as_parse(|x| x.unwrap())
     }
 
-    pub fn parse_optional<T: FromStr>(&self) -> Vec<Option<T>> {
-        self.data.lines().map(|s| s.parse().ok()).collect()
+    pub fn as_parse_optional<T: FromStr>(&self) -> Vec<Option<T>> {
+        self.as_parse(|x| x.ok())
     }
 }
 

@@ -2,7 +2,7 @@ use crate::Input;
 use std::str::FromStr;
 
 pub fn run(input: Input) {
-    let data = input.parse_lines::<Claim>();
+    let data = input.as_parse_type::<Claim>();
 
     // part one.
     let overlap = (0..1000)

@@ -2,7 +2,7 @@ use crate::Input;
 use std::collections::HashSet;
 
 pub fn run(input: Input) {
-    let data = input.parse_lines();
+    let data = input.as_parse_type();
 
     // part one.
     println!("{}", data.iter().sum::<i32>());
