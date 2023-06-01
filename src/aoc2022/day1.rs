@@ -1,21 +1,10 @@
 use crate::Input;
 
 pub fn run(input: Input) {
-    let data = input.as_lines();
+    let data = input.parse_optional::<u32>();
     let mut elf_cal = data
-        .iter()
-        .chain([&""])
-        .scan(0, |acc, &x| {
-            if x.is_empty() {
-                let res = *acc;
-                *acc = 0;
-                Some(Some(res))
-            } else {
-                *acc += x.parse::<u32>().unwrap();
-                Some(None)
-            }
-        })
-        .flatten()
+        .split(|line| line.is_none())
+        .map(|group| group.iter().map(|x| x.unwrap()).sum())
         .collect::<Vec<_>>();
 
     // part one.
