@@ -25,7 +25,7 @@ impl Input {
     where
         <T as FromStr>::Err: fmt::Debug,
     {
-        self.as_lines().iter().map(|s| s.parse().unwrap()).collect()
+        self.data.lines().map(|s| s.parse().unwrap()).collect()
     }
 
     pub fn parse_optional<T: FromStr>(&self) -> Vec<Option<T>> {
