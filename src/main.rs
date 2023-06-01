@@ -50,8 +50,8 @@ struct Args {
 }
 
 fn main() {
-    println!("My Advent of Code manager");
-    println!("-------------------------");
+    println!("My Advent of Code");
+    println!("-----------------");
     let Args { year, day } = Args::parse();
     println!("year: {}  day: {}\n", year, day);
 
