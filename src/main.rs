@@ -2,8 +2,8 @@ mod aoc2018;
 mod aoc2022;
 
 use clap::Parser;
-use std::collections::HashMap;
 use std::path::Path;
+use std::collections::BTreeMap;
 use std::str::FromStr;
 use std::{fmt, fs, io};
 
@@ -12,9 +12,9 @@ pub struct Input {
 }
 
 impl Input {
-    fn new(Args { year, day }: Args) -> io::Result<Self> {
+    fn new(year: u16, day: u8) -> io::Result<Self> {
         Ok(Self {
-            data: fs::read_to_string(format!("inputs/{year}/{day}"))?,
+            data: fs::read_to_string(format!("src/aoc{year}/inputs/{day}"))?,
         })
     }
 
