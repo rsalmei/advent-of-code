@@ -38,7 +38,6 @@ pub fn run(input: Input) {
 
     // part two.
     let min_len = (b'a'..=b'z')
-        .into_iter()
         .map(|unit| [unit, unit.to_ascii_uppercase()])
         .map(|units| {
             let polymer = data
