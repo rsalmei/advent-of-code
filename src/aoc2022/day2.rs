@@ -1,16 +1,16 @@
 use crate::Input;
+use Hand::*;
 use Outcome::*;
-use Rps::*;
 
-#[derive(Copy, Clone, PartialEq)]
-enum Rps {
-    Rock = 1,
+#[derive(Debug, Copy, Clone, PartialEq)]
+enum Hand {
+    Rock = 1, // number of points.
     Paper = 2,
     Scissors = 3,
 }
 
-impl Rps {
-    fn from(letter: u8, map: &str) -> Self {
+impl From<(u8, &str)> for Hand {
+    fn from((letter, map): (u8, &str)) -> Self {
         let map = map.as_bytes();
         match *map {
             [x, _, _] if x == letter => Rock,
@@ -19,8 +19,10 @@ impl Rps {
             _ => unreachable!(),
         }
     }
+}
 
-    fn score(self, other: Rps) -> u32 {
+impl Hand {
+    fn score(self, other: Hand) -> u32 {
         self as u32
             + match (self, other) {
                 _ if self == other => 3,
@@ -44,42 +46,37 @@ impl Rps {
     }
 }
 
-#[derive(Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 enum Outcome {
-    Win = 6,
-    Draw = 3,
-    Lose = 0,
+    Win,
+    Draw,
+    Lose,
 }
 
-impl Outcome {
-    fn from(letter: u8) -> Self {
-        match letter {
-            b'X' => Lose,
-            b'Y' => Draw,
-            b'Z' => Win,
-            _ => unreachable!(),
+impl From<Hand> for Outcome {
+    fn from(hand: Hand) -> Self {
+        match hand {
+            Rock => Lose,
+            Paper => Draw,
+            Scissors => Win,
         }
     }
 }
 
 pub fn run(input: Input) {
-    let data = input.as_lines();
+    let data = input.get_as(|s| {
+        let s = s.as_bytes();
+        (Hand::from((s[0], "ABC")), Hand::from((s[2], "XYZ")))
+    });
 
     // part one.
-    let games = data
-        .iter()
-        .map(|&x| x.as_bytes())
-        .map(|x| (x[0], x[2]))
-        .map(|(a, b)| (Rps::from(a, "ABC"), Rps::from(b, "XYZ")))
-        .map(|(a, b)| b.score(a));
+    let games = data.iter().map(|&(a, b)| b.score(a));
     println!("{}", games.sum::<u32>());
 
     // part two.
     let games = data
         .iter()
-        .map(|&x| x.as_bytes())
-        .map(|x| (x[0], x[2]))
-        .map(|(a, b)| (Rps::from(a, "ABC"), Outcome::from(b)))
+        .map(|&(a, b)| (a, Outcome::from(b)))
         .map(|(a, out)| a.reverse(out).score(a));
     println!("{}", games.sum::<u32>());
 }
