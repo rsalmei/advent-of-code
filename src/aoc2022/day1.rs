@@ -1,7 +1,7 @@
 use crate::Input;
 
 pub fn run(input: Input) {
-    let data = input.as_parse_optional::<u32>();
+    let data = input.as_optional::<u32>();
     let mut elf_cal = data
         .split(|line| line.is_none())
         .map(|group| group.iter().map(|x| x.unwrap()).sum())

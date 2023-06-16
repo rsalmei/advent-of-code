@@ -64,7 +64,7 @@ impl From<Hand> for Outcome {
 }
 
 pub fn run(input: Input) {
-    let data = input.get_as(|s| {
+    let data = input.map_lines(|s| {
         let s = s.as_bytes();
         (Hand::from((s[0], "ABC")), Hand::from((s[2], "XYZ")))
     });

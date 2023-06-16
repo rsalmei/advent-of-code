@@ -3,7 +3,7 @@ use std::borrow::Cow;
 use std::iter;
 
 pub fn run(input: Input) {
-    let mut data = input.data.into_bytes();
+    let mut data = input.into_bytes();
     data.pop(); // \n at the end of the file.
 
     // part one.
