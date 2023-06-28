@@ -1,11 +1,7 @@
 use crate::Input;
 
 pub fn run(input: Input) {
-    let data = input
-        .as_lines()
-        .into_iter()
-        .map(|s| s.as_bytes().iter().map(|&x| x - b'0').collect::<Vec<_>>())
-        .collect::<Vec<_>>();
+    let data = input.map_lines(|s| s.as_bytes().iter().map(|&x| x - b'0').collect::<Vec<_>>());
     let (rows, cols) = (data.len(), data[0].len());
 
     // part one.

@@ -42,12 +42,10 @@ impl Add for Location {
 }
 
 pub fn run(input: Input) {
-    let data = input
-        .as_lines()
-        .into_iter()
-        .map(|s| s.split_once(", ").unwrap())
-        .map(|(x, y)| (x.parse::<usize>().unwrap(), y.parse::<usize>().unwrap()))
-        .collect::<Vec<_>>();
+    let data = input.map_lines(|s| {
+        let (x, y) = s.split_once(", ").unwrap();
+        (x.parse::<usize>().unwrap(), y.parse::<usize>().unwrap())
+    });
     let (xm, ym) = (
         data.iter().map(|&(x, _)| x).max().unwrap(),
         data.iter().map(|&(_, y)| y).max().unwrap(),
