@@ -24,7 +24,7 @@ impl Input {
         self.map_lines(|s| s)
     }
 
-    pub fn parse_lines<T: FromStr, U, F: Fn(Result<T, T::Err>) -> U>(&self, f: F) -> Vec<U> {
+    fn parse_lines<T: FromStr, U, F: Fn(Result<T, T::Err>) -> U>(&self, f: F) -> Vec<U> {
         self.map_lines(|s| f(s.parse()))
     }
 
