@@ -5,52 +5,45 @@ pub fn run(input: Input) {
     let data = input.as_type::<Claim>();
 
     // part one.
-    let overlap = (0..1000)
-        .flat_map(|x| (0..1000).map(move |y| (x, y)))
-        .map(|(x, y)| {
-            data.iter()
-                .try_fold(true, |acc, c| {
-                    (!c.contains(x, y))
-                        .then_some(acc)
-                        .or_else(|| acc.then_some(false))
-                })
-                .map_or(1, |_| 0)
-        })
-        .sum::<u32>();
+    let mut grid = vec![0u16; 1000 * 1000];
+    data.iter().for_each(|c| c.mark(&mut grid));
+    let overlap = grid.into_iter().filter(|&x| x > 1).count();
     println!("{}", overlap);
 
     // part two.
     let unique = data.iter().find(|&c| {
         data.iter()
-            .filter(|&c2| !std::ptr::eq(c, c2))
-            .all(|c2| !c.overlaps(c2))
+            .filter(|&c2| c.id != c2.id)
+            .all(|c2| !c.overlap(c2))
     });
     println!("{}", unique.unwrap().id);
 }
 
 #[derive(Debug)]
 struct Claim {
-    id: u32,
-    x: u32,
-    y: u32,
-    x2: u32,
-    y2: u32,
+    id: usize,
+    x: usize,
+    y: usize,
+    x2: usize,
+    y2: usize,
 }
 
 impl Claim {
-    fn contains(&self, x: u32, y: u32) -> bool {
-        x >= self.x && x <= self.x2 && y >= self.y && y <= self.y2
+    fn mark(&self, grid: &mut [u16]) {
+        for x in self.x..=self.x2 {
+            for y in self.y..=self.y2 {
+                grid[y * 1000 + x] += 1;
+            }
+        }
     }
 
-    fn overlaps(&self, c: &Claim) -> bool {
-        (self.x..=self.x2)
-            .flat_map(|x| (self.y..=self.y2).map(move |y| (x, y)))
-            .any(|(x, y)| c.contains(x, y))
+    fn overlap(&self, other: &Self) -> bool {
+        !(self.x2 < other.x || self.x > other.x2 || self.y2 < other.y || self.y > other.y2)
     }
 }
 
 impl FromStr for Claim {
-    type Err = std::num::ParseIntError;
+    type Err = ();
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         // #1 @ 1,3: 4x4
