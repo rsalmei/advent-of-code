@@ -8,7 +8,7 @@ pub struct Input {
 impl Input {
     pub fn new(year: u16, day: u8) -> io::Result<Self> {
         Ok(Self {
-            data: fs::read_to_string(format!("src/aoc{year}/day{day}/input"))?,
+            data: fs::read_to_string(format!("src/aoc{year}/inputs/{day}"))?,
         })
     }
 

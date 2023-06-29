@@ -53,7 +53,7 @@ pub fn run(input: Input) {
         .collect::<HashSet<_>>();
     let mut steps = data;
     loop {
-        workers.retain_mut(|(chosen, job): &mut (char, u8)| {
+        workers.retain_mut(|(chosen, job)| {
             *job -= 1;
             if *job != 0 {
                 true
