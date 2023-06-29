@@ -16,8 +16,12 @@ impl Input {
         self.data.into_bytes()
     }
 
+    pub fn lines(&self) -> impl Iterator<Item = &str> {
+        self.data.lines()
+    }
+
     pub fn map_lines<'a, T, F: Fn(&'a str) -> T>(&'a self, f: F) -> Vec<T> {
-        self.data.lines().map(f).collect()
+        self.lines().map(f).collect()
     }
 
     pub fn as_lines(&self) -> Vec<&str> {
