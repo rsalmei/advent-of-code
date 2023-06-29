@@ -5,6 +5,7 @@ mod input;
 use clap::Parser;
 use input::Input;
 use std::collections::BTreeMap;
+use std::time::Instant;
 
 #[derive(Debug, Copy, Clone, Parser)]
 struct Args {
@@ -26,13 +27,13 @@ fn main() {
         Some(runs) => match runs.get(&day) {
             Some(run) => {
                 println!("year: {year}  day: {day}\n");
-                run(Input::new(year, day).unwrap())
+                time_run(run, Input::new(year, day).unwrap())
             }
             None => {
                 println!("year: {year}");
                 for (&day, run) in runs {
                     println!("\nday: {day}");
-                    run(Input::new(year, day).unwrap())
+                    time_run(run, Input::new(year, day).unwrap())
                 }
             }
         },
@@ -45,4 +46,10 @@ fn main() {
             })
         }
     }
+}
+
+fn time_run(run: &fn(Input), input: Input) {
+    let start = Instant::now();
+    run(input);
+    println!("-- {:?}", start.elapsed())
 }
