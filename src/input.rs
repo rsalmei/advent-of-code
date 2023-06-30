@@ -12,10 +12,6 @@ impl Input {
         })
     }
 
-    pub fn into_bytes(self) -> Vec<u8> {
-        self.data.into_bytes()
-    }
-
     pub fn lines(&self) -> impl Iterator<Item = &str> {
         self.data.lines()
     }

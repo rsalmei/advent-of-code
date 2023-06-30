@@ -1,15 +1,11 @@
 use crate::Input;
-use std::borrow::Cow;
-use std::iter;
+use std::{iter, mem};
 
 pub fn run(input: Input) {
-    let mut data = input.into_bytes();
-    data.pop(); // \n at the end of the file.
+    let data = Vec::from(input.lines().next().unwrap());
 
-    // part one.
-    let react = |data: &[u8]| {
-        let mut out = Vec::with_capacity(data.len());
-        data.iter()
+    fn react(w: &[u8], out: &mut Vec<u8>) {
+        w.iter()
             .chain(iter::once(&0))
             .fold(None, |acc: Option<u8>, &d| {
                 match acc {
@@ -20,32 +16,34 @@ pub fn run(input: Input) {
                 };
                 Some(d)
             });
-        out
-    };
-    let react_fully = |data: &[u8]| {
-        let mut before = Cow::Borrowed(data);
+    }
+    fn react_fully(mut w: Vec<u8>) -> usize {
+        let mut out = Vec::with_capacity(w.len());
         loop {
-            let after: Cow<[u8]> = Cow::Owned(react(&before));
-            match before.len() == after.len() {
-                true => break after,
-                false => before = after,
+            react(&w, &mut out);
+            match w.len() == out.len() {
+                true => break out.len(),
+                false => {
+                    mem::swap(&mut w, &mut out);
+                    out.clear();
+                }
             }
         }
-    };
+    }
 
-    let final_polymer = react_fully(&data);
-    println!("{}", final_polymer.len());
+    // part one.
+    println!("{}", react_fully(data.clone()));
 
     // part two.
     let min_len = (b'a'..=b'z')
-        .map(|unit| [unit, unit.to_ascii_uppercase()])
-        .map(|units| {
+        .map(|unit| {
+            let unit_up = unit.to_ascii_uppercase();
             let polymer = data
                 .iter()
-                .filter(|&c| !units.contains(c))
+                .filter(|&&c| c != unit && c != unit_up)
                 .copied()
-                .collect::<Vec<_>>();
-            react_fully(&polymer).len()
+                .collect();
+            react_fully(polymer)
         })
         .min();
     println!("{}", min_len.unwrap());
