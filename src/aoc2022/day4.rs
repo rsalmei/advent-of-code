@@ -1,6 +1,23 @@
 use crate::Input;
 use std::str::FromStr;
 
+pub fn run(input: Input) {
+    let data = input
+        .as_lines()
+        .iter()
+        .map(|&s| s.split_once(',').unwrap())
+        .map(|(s, t)| (s.parse::<Pair>().unwrap(), t.parse().unwrap()))
+        .collect::<Vec<_>>();
+
+    // part one.
+    let redundant = data.iter().filter(|(p, q)| p.fully_contains(q));
+    println!("{}", redundant.count());
+
+    // part two.
+    let overlap = data.iter().filter(|(p, q)| p.overlap(q));
+    println!("{}", overlap.count());
+}
+
 struct Pair {
     a: u8,
     b: u8,
@@ -26,21 +43,4 @@ impl Pair {
     fn overlap(&self, other: &Self) -> bool {
         !(self.a > other.b || self.b < other.a)
     }
-}
-
-pub fn run(input: Input) {
-    let data = input
-        .as_lines()
-        .iter()
-        .map(|&s| s.split_once(',').unwrap())
-        .map(|(s, t)| (s.parse::<Pair>().unwrap(), t.parse().unwrap()))
-        .collect::<Vec<_>>();
-
-    // part one.
-    let redundant = data.iter().filter(|(p, q)| p.fully_contains(q));
-    println!("{}", redundant.count());
-
-    // part two.
-    let overlap = data.iter().filter(|(p, q)| p.overlap(q));
-    println!("{}", overlap.count());
 }

@@ -12,6 +12,7 @@ pub fn run(input: Input) {
         })
         .collect::<Vec<_>>();
 
+    // part one.
     fn sim(data: &[&str], tail_size: usize) -> usize {
         let mut head = (0i32, 0i32);
         let mut rope = vec![(0, 0); tail_size];
@@ -36,8 +37,6 @@ pub fn run(input: Input) {
         }
         visited.len()
     }
-
-    // part one.
     println!("{}", sim(&data, 1));
 
     // part two.

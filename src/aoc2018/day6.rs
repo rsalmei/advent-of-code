@@ -3,6 +3,61 @@ use std::collections::HashSet;
 use std::ops::{Add, Rem};
 use Location::*;
 
+pub fn run(input: Input) {
+    let data = input.map_lines(|s| {
+        let (x, y) = s.split_once(", ").unwrap();
+        (x.parse::<usize>().unwrap(), y.parse::<usize>().unwrap())
+    });
+
+    // part one.
+    let (xm, ym) = (
+        data.iter().map(|&(x, _)| x).max().unwrap(),
+        data.iter().map(|&(_, y)| y).max().unwrap(),
+    );
+    let fill = |grid: &mut Vec<Vec<Location>>, op: fn(Location, Location) -> Location| {
+        (0..=xm)
+            .flat_map(|x| (0..=ym).map(move |y| (x, y)))
+            .for_each(|(x, y)| {
+                grid[y][x] = data
+                    .iter()
+                    .enumerate()
+                    .map(|(who, &o)| Dist {
+                        who,
+                        dist: dist(x, y, o),
+                    })
+                    .fold(Clear, op)
+            })
+    };
+
+    let mut grid = vec![vec![Clear; xm + 1]; ym + 1];
+    fill(&mut grid, |acc, x| acc % x);
+    let infinite = grid[0]
+        .iter()
+        .chain(&grid[ym])
+        .chain(grid[1..ym].iter().flat_map(|r| [&r[0], &r[xm]]))
+        .filter_map(|loc| match loc {
+            Dist { who, .. } => Some(*who),
+            _ => None,
+        })
+        .collect::<HashSet<_>>();
+    let areas = (0..data.len()).filter(|i| !infinite.contains(i)).map(|i| {
+        grid[1..ym]
+            .iter()
+            .flat_map(|r| &r[1..xm])
+            .filter(|loc| matches!(loc, Dist { who, .. } if i == *who))
+            .count()
+    });
+    println!("{}", areas.max().unwrap());
+
+    // part two.
+    fill(&mut grid, |acc, x| acc + x);
+    let size = grid[1..ym]
+        .iter()
+        .flat_map(|r| &r[1..xm])
+        .filter(|loc| matches!(loc, Tie { dist } if *dist < 10_000));
+    println!("{}", size.count());
+}
+
 #[derive(Debug, Copy, Clone)]
 enum Location {
     Dist { dist: usize, who: usize },
@@ -39,61 +94,6 @@ impl Add for Location {
             _ => unreachable!(),
         }
     }
-}
-
-pub fn run(input: Input) {
-    let data = input.map_lines(|s| {
-        let (x, y) = s.split_once(", ").unwrap();
-        (x.parse::<usize>().unwrap(), y.parse::<usize>().unwrap())
-    });
-    let (xm, ym) = (
-        data.iter().map(|&(x, _)| x).max().unwrap(),
-        data.iter().map(|&(_, y)| y).max().unwrap(),
-    );
-
-    let fill = |grid: &mut Vec<Vec<Location>>, op: fn(Location, Location) -> Location| {
-        (0..=xm)
-            .flat_map(|x| (0..=ym).map(move |y| (x, y)))
-            .for_each(|(x, y)| {
-                grid[y][x] = data
-                    .iter()
-                    .enumerate()
-                    .map(|(who, &o)| Dist {
-                        who,
-                        dist: dist(x, y, o),
-                    })
-                    .fold(Clear, op)
-            })
-    };
-    let mut grid = vec![vec![Clear; xm + 1]; ym + 1];
-
-    // part one.
-    fill(&mut grid, |acc, x| acc % x);
-    let infinite = grid[0]
-        .iter()
-        .chain(&grid[ym])
-        .chain(grid[1..ym].iter().flat_map(|r| [&r[0], &r[xm]]))
-        .filter_map(|loc| match loc {
-            Dist { who, .. } => Some(*who),
-            _ => None,
-        })
-        .collect::<HashSet<_>>();
-    let areas = (0..data.len()).filter(|i| !infinite.contains(i)).map(|i| {
-        grid[1..ym]
-            .iter()
-            .flat_map(|r| &r[1..xm])
-            .filter(|loc| matches!(loc, Dist { who, .. } if i == *who))
-            .count()
-    });
-    println!("{}", areas.max().unwrap());
-
-    // part two.
-    fill(&mut grid, |acc, x| acc + x);
-    let size = grid[1..ym]
-        .iter()
-        .flat_map(|r| &r[1..xm])
-        .filter(|loc| matches!(loc, Tie { dist } if *dist < 10_000));
-    println!("{}", size.count());
 }
 
 fn dist(x: usize, y: usize, (ox, oy): (usize, usize)) -> usize {

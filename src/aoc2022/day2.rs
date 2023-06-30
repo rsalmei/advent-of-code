@@ -2,6 +2,24 @@ use crate::Input;
 use Hand::*;
 use Outcome::*;
 
+pub fn run(input: Input) {
+    let data = input.map_lines(|s| {
+        let s = s.as_bytes();
+        (Hand::from((s[0], "ABC")), Hand::from((s[2], "XYZ")))
+    });
+
+    // part one.
+    let games = data.iter().map(|&(a, b)| b.score(a));
+    println!("{}", games.sum::<u32>());
+
+    // part two.
+    let games = data
+        .iter()
+        .map(|&(a, b)| (a, Outcome::from(b)))
+        .map(|(a, out)| a.reverse(out).score(a));
+    println!("{}", games.sum::<u32>());
+}
+
 #[derive(Debug, Copy, Clone, PartialEq)]
 enum Hand {
     Rock = 1, // number of points.
@@ -61,22 +79,4 @@ impl From<Hand> for Outcome {
             Scissors => Win,
         }
     }
-}
-
-pub fn run(input: Input) {
-    let data = input.map_lines(|s| {
-        let s = s.as_bytes();
-        (Hand::from((s[0], "ABC")), Hand::from((s[2], "XYZ")))
-    });
-
-    // part one.
-    let games = data.iter().map(|&(a, b)| b.score(a));
-    println!("{}", games.sum::<u32>());
-
-    // part two.
-    let games = data
-        .iter()
-        .map(|&(a, b)| (a, Outcome::from(b)))
-        .map(|(a, out)| a.reverse(out).score(a));
-    println!("{}", games.sum::<u32>());
 }

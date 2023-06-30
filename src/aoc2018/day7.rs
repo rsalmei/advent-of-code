@@ -3,23 +3,6 @@ use std::cmp::Reverse;
 use std::collections::{BinaryHeap, HashSet};
 use std::str::FromStr;
 
-#[derive(Debug, Copy, Clone)]
-struct Step {
-    from: char,
-    to: char,
-}
-
-impl FromStr for Step {
-    type Err = ();
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Ok(Self {
-            from: s.as_bytes()[5] as char,
-            to: s.as_bytes()[36] as char,
-        })
-    }
-}
-
 pub fn run(input: Input) {
     let data = input.as_type::<Step>();
 
@@ -79,4 +62,21 @@ pub fn run(input: Input) {
         t += 1;
     }
     println!("{t}");
+}
+
+#[derive(Debug, Copy, Clone)]
+struct Step {
+    from: char,
+    to: char,
+}
+
+impl FromStr for Step {
+    type Err = ();
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Ok(Self {
+            from: s.as_bytes()[5] as char,
+            to: s.as_bytes()[36] as char,
+        })
+    }
 }

@@ -4,12 +4,12 @@ use std::collections::HashSet;
 pub fn run(input: Input) {
     let data = input.as_lines();
 
+    // part one.
     let mut priority = Vec::with_capacity(53);
     priority.push(b'!');
     priority.extend(b'a'..=b'z');
     priority.extend(b'A'..=b'Z');
 
-    // part one.
     let items = data
         .iter()
         .map(|&ks| {

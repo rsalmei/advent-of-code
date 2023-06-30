@@ -4,6 +4,8 @@ use std::str::FromStr;
 
 pub fn run(input: Input) {
     let mut data = input.as_lines();
+
+    // part one.
     data.sort_unstable();
     let data = data
         .into_iter()
@@ -21,8 +23,6 @@ pub fn run(input: Input) {
         })
         .flatten()
         .collect::<Vec<_>>();
-
-    // part one.
     fn find_max<T: Ord>(it: impl Iterator<Item = (T, u32)>) -> (T, u32) {
         it.fold(BTreeMap::new(), |mut acc, (k, c)| {
             *acc.entry(k).or_insert(0u32) += c;

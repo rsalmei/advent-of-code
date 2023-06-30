@@ -4,6 +4,7 @@ use std::{iter, mem};
 pub fn run(input: Input) {
     let data = Vec::from(input.lines().next().unwrap());
 
+    // part one.
     fn react(w: &[u8], out: &mut Vec<u8>) {
         w.iter()
             .chain(iter::once(&0))
@@ -30,8 +31,6 @@ pub fn run(input: Input) {
             }
         }
     }
-
-    // part one.
     println!("{}", react_fully(data.clone()));
 
     // part two.

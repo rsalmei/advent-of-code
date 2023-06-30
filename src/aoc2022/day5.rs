@@ -1,6 +1,50 @@
 use crate::Input;
 use std::str::FromStr;
 
+pub fn run(input: Input) {
+    let data = input.as_lines();
+
+    // part one.
+    let stack_line = data.iter().position(|&s| s.starts_with(" 1")).unwrap();
+    let stack_num = data[stack_line].split_ascii_whitespace().last().unwrap();
+    let stack_num = stack_num.parse::<usize>().unwrap();
+
+    let mut stacks = (0..stack_num)
+        .map(|n| {
+            data[..stack_line]
+                .iter()
+                .rev()
+                .map(|&s| s.chars().nth(1 + 4 * n).unwrap())
+                .filter(|&b| b != ' ')
+                .collect::<Vec<_>>()
+        })
+        .collect::<Vec<_>>();
+
+    {
+        let mut stacks = stacks.clone();
+        data[stack_line + 2..]
+            .iter()
+            .map(|&s| s.parse::<Move>().unwrap())
+            .for_each(|m| m.apply_single(&mut stacks));
+        let top = stacks
+            .iter()
+            .map(|v| *v.last().unwrap())
+            .collect::<String>();
+        println!("{top}");
+    }
+
+    // part two.
+    data[stack_line + 2..]
+        .iter()
+        .map(|&s| s.parse::<Move>().unwrap())
+        .for_each(|m| m.apply_multi(&mut stacks));
+    let top = stacks
+        .iter()
+        .map(|v| *v.last().unwrap())
+        .collect::<String>();
+    println!("{top}");
+}
+
 #[derive(Debug)]
 struct Move {
     qty: usize,
@@ -38,47 +82,4 @@ impl FromStr for Move {
             to: nums.next().unwrap() - 1,
         })
     }
-}
-
-pub fn run(input: Input) {
-    let data = input.as_lines();
-    let stack_line = data.iter().position(|&s| s.starts_with(" 1")).unwrap();
-    let stack_num = data[stack_line].split_ascii_whitespace().last().unwrap();
-    let stack_num = stack_num.parse::<usize>().unwrap();
-
-    let mut stacks = (0..stack_num)
-        .map(|n| {
-            data[..stack_line]
-                .iter()
-                .rev()
-                .map(|&s| s.chars().nth(1 + 4 * n).unwrap())
-                .filter(|&b| b != ' ')
-                .collect::<Vec<_>>()
-        })
-        .collect::<Vec<_>>();
-
-    // part one.
-    {
-        let mut stacks = stacks.clone();
-        data[stack_line + 2..]
-            .iter()
-            .map(|&s| s.parse::<Move>().unwrap())
-            .for_each(|m| m.apply_single(&mut stacks));
-        let top = stacks
-            .iter()
-            .map(|v| *v.last().unwrap())
-            .collect::<String>();
-        println!("{top}");
-    }
-
-    // part two.
-    data[stack_line + 2..]
-        .iter()
-        .map(|&s| s.parse::<Move>().unwrap())
-        .for_each(|m| m.apply_multi(&mut stacks));
-    let top = stacks
-        .iter()
-        .map(|v| *v.last().unwrap())
-        .collect::<String>();
-    println!("{top}");
 }

@@ -2,9 +2,9 @@ use crate::Input;
 
 pub fn run(input: Input) {
     let data = input.map_lines(|s| s.as_bytes().iter().map(|&x| x - b'0').collect::<Vec<_>>());
-    let (rows, cols) = (data.len(), data[0].len());
 
     // part one.
+    let (rows, cols) = (data.len(), data[0].len());
     let visibles = (1..rows - 1)
         .flat_map(|y| (1..cols - 1).map(move |x| (y, x)))
         .filter(|&(y, x)| {
