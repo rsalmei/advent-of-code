@@ -8,7 +8,7 @@ pub fn run(input: Input) {
     // part one.
     data.sort_unstable();
     let data = data
-        .into_iter()
+        .iter()
         .map(|d| d.parse::<Record>().unwrap())
         .scan(Slept::default(), |acc, r| {
             match r {

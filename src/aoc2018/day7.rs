@@ -11,7 +11,7 @@ pub fn run(input: Input) {
         .iter()
         .flat_map(|s| [s.from, s.to])
         .collect::<HashSet<_>>();
-    let mut steps = data.clone();
+    let mut steps = data.clone().into_vec();
     while !todo.is_empty() {
         let blocked = steps.iter().map(|s| s.to).collect::<HashSet<_>>();
         let ready = todo
@@ -34,7 +34,7 @@ pub fn run(input: Input) {
         .iter()
         .flat_map(|s| [s.from, s.to])
         .collect::<HashSet<_>>();
-    let mut steps = data;
+    let mut steps = data.into_vec();
     loop {
         workers.retain_mut(|(chosen, job)| {
             *job -= 1;

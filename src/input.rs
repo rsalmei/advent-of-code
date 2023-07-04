@@ -16,26 +16,26 @@ impl Input {
         self.data.lines()
     }
 
-    pub fn map_lines<'a, T, F: Fn(&'a str) -> T>(&'a self, f: F) -> Vec<T> {
+    pub fn map_lines<'a, T, F: Fn(&'a str) -> T>(&'a self, f: F) -> Box<[T]> {
         self.lines().map(f).collect()
     }
 
-    pub fn as_lines(&self) -> Vec<&str> {
+    pub fn as_lines(&self) -> Box<[&str]> {
         self.map_lines(|s| s)
     }
 
-    fn parse_lines<T: FromStr, U, F: Fn(Result<T, T::Err>) -> U>(&self, f: F) -> Vec<U> {
+    fn parse_lines<T: FromStr, U, F: Fn(Result<T, T::Err>) -> U>(&self, f: F) -> Box<[U]> {
         self.map_lines(|s| f(s.parse()))
     }
 
-    pub fn as_type<T: FromStr>(&self) -> Vec<T>
+    pub fn as_type<T: FromStr>(&self) -> Box<[T]>
     where
         T::Err: fmt::Debug,
     {
         self.parse_lines(|x| x.unwrap())
     }
 
-    pub fn as_optional<T: FromStr>(&self) -> Vec<Option<T>> {
+    pub fn as_optional<T: FromStr>(&self) -> Box<[Option<T>]> {
         self.parse_lines(|x| x.ok())
     }
 }
