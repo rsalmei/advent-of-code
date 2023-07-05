@@ -5,12 +5,9 @@ pub fn run(input: Input) {
     let data = input.lines().next().unwrap();
 
     // part one.
-    let mut it = data
-        .split(|c: char| !c.is_numeric())
-        .map(str::trim)
-        .filter(|s| !s.is_empty());
-    let num = |d: &mut dyn Iterator<Item = &str>| d.next().unwrap().parse().unwrap();
-    let (players, marbles) = (num(&mut it), num(&mut it));
+    let mut it = data.split_ascii_whitespace();
+    let mut get = |n| it.nth(n).unwrap().parse().unwrap();
+    let (players, marbles) = (get(0), get(5));
     let scores = game(players, marbles);
     println!("{}", scores.into_iter().max().unwrap());
 
