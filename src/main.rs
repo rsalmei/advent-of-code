@@ -13,8 +13,8 @@ struct Args {
     year: Option<u16>,
     /// A challenge within an event.
     day: Option<u8>,
-    #[arg(short, long, default_value_t = false)]
     /// Do not print elapsed times.
+    #[arg(short, long, default_value_t = false)]
     clean: bool,
 }
 

@@ -41,8 +41,8 @@ impl Sky {
         let (mut x, mut y, mut xx, mut yy) = (i32::MAX, i32::MAX, i32::MIN, i32::MIN);
         self.points.iter().for_each(|p| {
             x = x.min(p.pos.0);
-            xx = xx.max(p.pos.0);
             y = y.min(p.pos.1);
+            xx = xx.max(p.pos.0);
             yy = yy.max(p.pos.1);
         });
         (x, y, xx, yy)
@@ -53,7 +53,7 @@ impl Sky {
         self.points.iter().for_each(|p| {
             if let Some(r) = board.get_mut((p.pos.1 - y) as usize) {
                 if let Some(c) = r.get_mut((p.pos.0 - x) as usize) {
-                    *c = '*'
+                    *c = '#'
                 }
             }
         });
