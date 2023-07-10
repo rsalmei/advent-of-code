@@ -7,7 +7,10 @@ use input::Input;
 use std::collections::BTreeMap;
 use std::time::{Duration, Instant};
 
-#[derive(Debug, Copy, Clone, Parser)]
+type Days = [fn(Input)];
+const AOC: &[(u16, &Days)] = &include!(concat!(env!("OUT_DIR"), "/aoc-auto-detect.rs"));
+
+#[derive(Debug, Parser)]
 struct Args {
     /// An Advent of Code event.
     year: Option<u16>,
@@ -25,9 +28,9 @@ fn main() {
     let Args { year, day, clean } = Args::parse();
     let (year, day) = (year.unwrap_or_default(), day.unwrap_or_default());
 
-    let aoc = [(2018, aoc2018::DAYS), (2022, aoc2022::DAYS)]
-        .into_iter()
-        .map(|(y, r)| (y, (1..).zip(r).collect::<BTreeMap<_, _>>()))
+    let aoc = AOC
+        .iter()
+        .map(|&(y, r)| (y, (1..).zip(r).collect::<BTreeMap<_, _>>()))
         .collect::<BTreeMap<_, _>>();
     match aoc.get(&year) {
         Some(runs) => match runs.get(&day) {
@@ -46,12 +49,12 @@ fn main() {
             }
         },
         None => {
-            println!("\nCalling with only the year runs all challenges in there.\nAvailable:");
+            println!("\nAvailable (calling with only the year runs all days in there):");
             aoc.iter().for_each(|(y, r)| {
                 print!("* {y}\n  ");
                 (1..=r.len()).for_each(|d| print!(" {d}"));
                 println!();
-            })
+            });
         }
     }
 }
