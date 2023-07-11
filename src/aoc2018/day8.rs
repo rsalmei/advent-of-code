@@ -7,8 +7,7 @@ pub fn run(input: Input) {
     let tree = data
         .split_ascii_whitespace()
         .map(|s| s.parse().unwrap())
-        .collect::<Vec<u32>>();
-    let tree = tree.into_iter().collect::<Node>();
+        .collect::<Node>();
     let sum = tree.preorder_fold(0, &mut |acc, node| acc + node.sum_meta());
     println!("{sum}");
 
