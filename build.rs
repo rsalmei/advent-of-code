@@ -20,7 +20,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 }
 
 fn collect_year(year: u16, file: &mut File) -> Result<(), Box<dyn Error>> {
-    println!("cargo:rerun-if-changed=src/aoc{year}/inputs/");
+    println!("cargo:rerun-if-changed=src/aoc{year}/mod.rs");
     let contents = fs::read_to_string(&format!("src/aoc{year}/mod.rs"))?;
     writeln!(file, r"({year}, &[",)?;
     let days = contents.lines().map(|s| {
