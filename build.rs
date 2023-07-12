@@ -11,7 +11,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let out_dir = env::var("OUT_DIR")?;
     let dest_path = Path::new(&out_dir).join("aoc-auto-detect.rs");
     let mut aoc_runners = File::create(dest_path)?;
-    writeln!(&mut aoc_runners, "[",)?;
+    writeln!(&mut aoc_runners, "&[",)?;
     YEARS
         .iter()
         .for_each(|&year| collect_year(year, &mut aoc_runners).unwrap());

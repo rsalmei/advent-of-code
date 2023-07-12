@@ -8,7 +8,7 @@ use std::collections::BTreeMap;
 use std::time::{Duration, Instant};
 
 type Days = [fn(Input)];
-const AOC: &[(u16, &Days)] = &include!(concat!(env!("OUT_DIR"), "/aoc-auto-detect.rs"));
+const AOC: &[(u16, &Days)] = include!(concat!(env!("OUT_DIR"), "/aoc-auto-detect.rs"));
 
 #[derive(Debug, Parser)]
 struct Args {
