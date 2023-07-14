@@ -1,5 +1,6 @@
 use crate::Input;
-use std::io::{self, Write};
+use std::sync::{Arc, Mutex};
+use std::thread;
 
 pub fn run(input: Input) {
     let serial = input.lines().next().unwrap().parse::<usize>().unwrap();
@@ -18,32 +19,40 @@ pub fn run(input: Input) {
             .flat_map(|x| (1..=300 - size + 1).map(move |y| (x, y)))
             .map(|(x, y)| {
                 (
-                    x,
-                    y,
+                    (x, y),
                     grid[y..y + size]
                         .iter()
                         .flat_map(|r| r[x..x + size].iter())
                         .sum::<isize>(),
                 )
             })
-            .max_by_key(|&(_, _, total)| total)
-            .unwrap()
+            .max_by_key(|&(_, total)| total)
     };
-    let (max_x, max_y, _total) = max_total(3);
+    let ((max_x, max_y), _total) = max_total(3).unwrap();
     println!("{max_x},{max_y}");
 
     // part two.
-    print!("{}\r", ".".repeat(100));
-    io::stdout().flush().unwrap();
-    let (size, (max_x, max_y, _total)) = (1..=300)
-        .inspect(|&size| {
-            if size % 3 == 2 {
-                print!("=");
-                io::stdout().flush().unwrap();
-            }
-        })
-        .map(|size| (size, max_total(size)))
-        .max_by_key(|&(_, (_, _, total))| total)
-        .unwrap();
-    println!("\n{max_x},{max_y},{size}");
+    let mutex = Arc::new(Mutex::new((1..=300).collect::<Vec<_>>()));
+    let (size, ((max_x, max_y), _total)) = thread::scope(|s| {
+        let all = (0..thread::available_parallelism().map_or(4, |p| p.get()))
+            .map(|_| {
+                let mutex = Arc::clone(&mutex);
+                s.spawn(move || {
+                    let mut out = Vec::new();
+                    loop {
+                        let x = mutex.lock().unwrap().pop();
+                        match x {
+                            Some(size) => out.push((size, max_total(size).unwrap())),
+                            None => break out,
+                        }
+                    }
+                })
+            })
+            .collect::<Vec<_>>();
+        all.into_iter()
+            .flat_map(|j| j.join().unwrap())
+            .max_by_key(|&(_, (_, total))| total)
+            .unwrap()
+    });
+    println!("{max_x},{max_y},{size}");
 }
