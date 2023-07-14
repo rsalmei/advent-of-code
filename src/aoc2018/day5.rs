@@ -1,5 +1,6 @@
 use crate::Input;
-use std::{iter, mem};
+use std::sync::Arc;
+use std::{iter, mem, thread};
 
 pub fn run(input: Input) {
     let data = Vec::from(input.lines().next().unwrap());
@@ -34,16 +35,30 @@ pub fn run(input: Input) {
     println!("{}", react_fully(data.clone()));
 
     // part two.
-    let min_len = (b'a'..=b'z')
-        .map(|unit| {
-            let unit_up = unit.to_ascii_uppercase();
-            let polymer = data
-                .iter()
-                .filter(|&&c| c != unit && c != unit_up)
-                .copied()
-                .collect();
-            react_fully(polymer)
-        })
-        .min();
+    let data = Arc::new(data);
+    let rem = (b'a'..=b'z').collect::<Vec<_>>();
+    let min_len = thread::scope(|s| {
+        let all = rem
+            .chunks(thread::available_parallelism().map_or(4, |p| rem.len() / p.get()))
+            .map(|units| {
+                let data = Arc::clone(&data);
+                s.spawn(move || {
+                    units
+                        .iter()
+                        .map(|&unit| {
+                            let unit_up = unit.to_ascii_uppercase();
+                            let polymer = data
+                                .iter()
+                                .filter(|&&c| c != unit && c != unit_up)
+                                .copied()
+                                .collect();
+                            react_fully(polymer)
+                        })
+                        .collect::<Vec<_>>()
+                })
+            })
+            .collect::<Vec<_>>();
+        all.into_iter().flat_map(|h| h.join().unwrap()).min()
+    });
     println!("{}", min_len.unwrap());
 }
