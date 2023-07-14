@@ -23,11 +23,11 @@ fn collect_year(year: u16, file: &mut File) -> Result<(), Box<dyn Error>> {
     println!("cargo:rerun-if-changed=src/aoc{year}/mod.rs");
     let contents = fs::read_to_string(&format!("src/aoc{year}/mod.rs"))?;
     writeln!(file, r"({year}, &[",)?;
-    let days = contents.lines().map(|s| {
+    let days = contents.lines().filter_map(|s| {
         s.trim_start_matches("pub mod day")
             .trim_end_matches(';')
             .parse::<u8>()
-            .unwrap()
+            .ok()
     });
     for day in 1..=days.max().unwrap() {
         writeln!(file, r"aoc{year}::day{day}::run,",)?;
