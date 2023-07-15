@@ -1,6 +1,4 @@
 use crate::Input;
-use std::sync::{Arc, Mutex};
-use std::thread;
 
 pub fn run(input: Input) {
     let serial = input.lines().next().unwrap().parse::<usize>().unwrap();
@@ -32,27 +30,9 @@ pub fn run(input: Input) {
     println!("{max_x},{max_y}");
 
     // part two.
-    let mutex = Arc::new(Mutex::new((1..=300).collect::<Vec<_>>()));
-    let (size, ((max_x, max_y), _total)) = thread::scope(|s| {
-        let all = (0..thread::available_parallelism().map_or(4, |p| p.get()))
-            .map(|_| {
-                let mutex = Arc::clone(&mutex);
-                s.spawn(move || {
-                    let mut out = Vec::new();
-                    loop {
-                        let x = mutex.lock().unwrap().pop();
-                        match x {
-                            Some(size) => out.push((size, max_total(size).unwrap())),
-                            None => break out,
-                        }
-                    }
-                })
-            })
-            .collect::<Vec<_>>();
-        all.into_iter()
-            .flat_map(|j| j.join().unwrap())
-            .max_by_key(|&(_, (_, total))| total)
-            .unwrap()
-    });
+    let (size, ((max_x, max_y), _total)) = (1..=300)
+        .map(|size| (size, max_total(size).unwrap()))
+        .max_by_key(|&(_, (_, total))| total)
+        .unwrap();
     println!("{max_x},{max_y},{size}");
 }
